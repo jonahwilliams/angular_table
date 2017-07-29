@@ -1,8 +1,10 @@
 # angular_table
 
-A library for Dart developers. It is awesome.
+A directive for rendering table views,  currently experimental.
 
 ## Usage
+AngularTableDirective is controlled with a TableController.  Use the methods on TableController inside a component to update your tables efficiently. See examples/ for a simple usecase.
+
 
 ## Features and bugs
 

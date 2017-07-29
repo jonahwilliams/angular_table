@@ -1,0 +1,16 @@
+<div class="table">
+    <div class="header">Things to do</div>
+    <div class="table-row" *ngTable="let row of controller; let i = index">
+        <div class="index cell">{{i}}</div>
+        <div class="name cell">{{row}}</div>
+        <div class="delete cell">
+            <material-button (trigger)="handleDeleteRow(i)" class="blue">
+                Delete
+            </material-button>
+        </div>
+    </div>
+</div>
+<material-input [(ngModel)]="text" (keyup.enter)="handleAddRow()"></material-input>
+<material-button (trigger)="handleAddRow()" raised>Add Todo</material-button>
+<material-button (trigger)="handleShuffle()" raised>Shuffle Todos</material-button>
+<material-button (trigger)="handleAdd100()" raised>Add 100 Todos</material-button>
