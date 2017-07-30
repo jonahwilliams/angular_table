@@ -13,19 +13,26 @@ import 'package:angular_components/angular_components.dart';
   directives: const [
     AngularTableDirective,
     materialDirectives,
+    MaterialIconComponent,
   ],
   providers: const [
     materialProviders,
   ],
+  pipes: const [
+    DatePipe,
+  ],
   preserveWhitespace: false,
 )
 class AppComponent {
-  final controller = new TableController<String>.from(const [
-    'This is a todo',
-    'this is another todo',
-    'Finish the table',
+  final controller = new TableController<Todo>.from([
+    new Todo(name: 'This is a todo', createdAt: new DateTime.now()),
+    new Todo(name: 'This is another todo', createdAt: new DateTime.now()),
+    new Todo(name: 'finish this table', createdAt: new DateTime.now()),
+    new Todo(name: 'eat some food', createdAt: new DateTime.now()),
+    new Todo(name: 'do some work', createdAt: new DateTime.now()),
   ]);
-  String text = '';
+  final selected = new Set<Todo>();
+  String todoName = '';
 
   /// Deletes the row at [index]
   void handleDeleteRow(int index) {
@@ -34,8 +41,8 @@ class AppComponent {
 
   /// Adds a new row to the table.
   void handleAddRow() {
-    controller.append(text);
-    text = '';
+    controller.append(new Todo(name: todoName, createdAt: new DateTime.now()));
+    todoName = '';
   }
 
   /// Shuffles the rows currently in the table.
@@ -47,19 +54,50 @@ class AppComponent {
 
   /// Adds 100 todos at once
   void handleAdd100() {
-    var gen = new math.Random();
-    var result = <String>[];
-    result.length = 100;
-    for (var i = 0; i < 100; i++) {
-      result[i] = new String.fromCharCodes([
-        gen.nextInt(127) + 33,
-        gen.nextInt(127) + 33,
-        gen.nextInt(127) + 33,
-        gen.nextInt(127) + 33,
-        gen.nextInt(127) + 33,
-        gen.nextInt(127) + 33,
-      ]);
+    var newTodos = new List.generate(100, (_) => new Todo.random());
+    controller.appendAll(newTodos);
+  }
+
+  void completeSelected() {
+    for (var todo in selected) {
+      todo.isDone = true;
     }
-    controller.appendAll(result);
+    selected.clear();
+  }
+
+  void updateSelected(bool value, Todo todo) {
+    if (value) {
+      selected.add(todo);
+    } else {
+      selected.remove(todo);
+    }
+  }
+}
+
+class Todo {
+  static final _gen = new math.Random();
+  static int _nextId = 0;
+
+  final String name;
+  final int id;
+  bool isDone;
+  final DateTime createdAt;
+
+  Todo({this.name, this.createdAt, this.isDone = false}) : id = _nextId++;
+
+  factory Todo.random() {
+    var name = new String.fromCharCodes([
+      _gen.nextInt(127) + 33,
+      _gen.nextInt(127) + 33,
+      _gen.nextInt(127) + 33,
+      _gen.nextInt(127) + 33,
+      _gen.nextInt(127) + 33,
+      _gen.nextInt(127) + 33,
+    ]);
+    return new Todo(
+      name: name,
+      isDone: false,
+      createdAt: new DateTime.now(),
+    );
   }
 }
