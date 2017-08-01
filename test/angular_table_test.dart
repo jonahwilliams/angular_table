@@ -27,18 +27,11 @@ void main() {
 
     /// Sets up the component test by first initializing the the component with
     /// [initialData] and then optionally calling an update method.
-    ///
-    /// the [pageObject] must be resolved after any DOM changes, or it won't
-    /// be up to date (unless you use Lazy<T>).
-    Future<Null> setUpComponent(List<String> initialData,
-        [void Function(TestComponent) update]) async {
+    Future<Null> setUpComponent(List<String> initialData) async {
       testFixture = await testBed.create(
           beforeChangeDetection: (TestComponent component) {
         component.data = initialData;
       });
-      if (update != null) {
-        await testFixture.update(update);
-      }
       pageObject = await testFixture.resolvePageObject<TestPO>(TestPO);
     }
 
@@ -50,8 +43,12 @@ void main() {
     });
 
     test('prepends a single row to the start', () async {
-      await setUpComponent(expectedRows, (component) {
-        component.controller.prepend('z');
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((component) {
+        component.controller
+          ..prepend('z')
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2', '3']);
@@ -59,8 +56,12 @@ void main() {
     });
 
     test('prepends a single row to the start in an empty table', () async {
-      await setUpComponent(const [], (component) {
-        component.controller.prepend('z');
+      await setUpComponent(const []);
+
+      await testFixture.update((component) {
+        component.controller
+          ..prepend('z')
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0']);
@@ -69,8 +70,12 @@ void main() {
 
     test('prepends multiple rows to the start', () async {
       const expectedPrepend = const ['z', 'y', 'x'];
-      await setUpComponent(expectedRows, (component) {
-        component.controller.prependAll(expectedPrepend);
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((component) {
+        component.controller
+          ..prependAll(expectedPrepend)
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2', '3', '4', '5']);
@@ -79,8 +84,12 @@ void main() {
 
     test('prepends multiple rows to the start in an empty table', () async {
       const expectedPrepend = const ['z', 'y', 'x'];
-      await setUpComponent(const [], (component) {
-        component.controller.prependAll(expectedPrepend);
+      await setUpComponent(const []);
+
+      await testFixture.update((component) {
+        component.controller
+          ..prependAll(expectedPrepend)
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2']);
@@ -88,8 +97,12 @@ void main() {
     });
 
     test('appends a single row to the end', () async {
-      await setUpComponent(expectedRows, (TestComponent component) {
-        component.controller.append('z');
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((TestComponent component) {
+        component.controller
+          ..append('z')
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2', '3']);
@@ -97,8 +110,12 @@ void main() {
     });
 
     test('appends a single row to the end in an empty table', () async {
-      await setUpComponent(const [], (TestComponent component) {
-        component.controller.append('z');
+      await setUpComponent(const []);
+
+      await testFixture.update((TestComponent component) {
+        component.controller
+          ..append('z')
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0']);
@@ -106,8 +123,12 @@ void main() {
     });
 
     test('appends multiple rows to the end', () async {
-      await setUpComponent(expectedRows, (component) {
-        component.controller.appendAll(['z', 'y', 'x']);
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((component) {
+        component.controller
+          ..appendAll(['z', 'y', 'x'])
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2', '3', '4', '5']);
@@ -115,8 +136,12 @@ void main() {
     });
 
     test('appends multiple rows to the end in an empty table', () async {
-      await setUpComponent(const [], (component) {
-        component.controller.appendAll(['z', 'y', 'x']);
+      await setUpComponent(const []);
+
+      await testFixture.update((component) {
+        component.controller
+          ..appendAll(['z', 'y', 'x'])
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2']);
@@ -124,8 +149,12 @@ void main() {
     });
 
     test('removes a row at a specified index', () async {
-      await setUpComponent(expectedRows, (component) {
-        component.controller.removeRow(1);
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((component) {
+        component.controller
+          ..removeRow(1)
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1']);
@@ -133,8 +162,12 @@ void main() {
     });
 
     test('inserts a row at a specified index', () async {
-      await setUpComponent(expectedRows, (component) {
-        component.controller.insertRow(1, 'z');
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((component) {
+        component.controller
+          ..insertRow(1, 'z')
+          ..updateIndex();
       });
 
       expect(await pageObject.first, ['0', '1', '2', '3']);
@@ -142,7 +175,9 @@ void main() {
     });
 
     test('clears the table of all rows', () async {
-      await setUpComponent(expectedRows, (component) {
+      await setUpComponent(expectedRows);
+
+      await testFixture.update((component) {
         component.controller.clear();
       });
 

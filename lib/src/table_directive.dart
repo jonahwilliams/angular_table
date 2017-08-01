@@ -35,30 +35,6 @@ class AngularTableDirective implements OnInit {
 
   @override
   void ngOnInit() {
-    _render();
-  }
-
-  /// The general purpose update which checks all rows.
-  void _render() {
-    var currentLength = _viewContainer.length;
-    var futureLength = _controller._rows.length;
-    for (var i = 0; i < math.min(currentLength, futureLength); i++) {
-      _viewContainer.get(i)
-        ..setLocal(r'$implicit', _controller._rows[i])
-        ..setLocal('index', i);
-    }
-    // If there are more rows than templates, append more templates.
-    if (currentLength < futureLength) {
-      for (var i = currentLength; i < futureLength; i++) {
-        _viewContainer.insertEmbeddedView(_templateRef, i)
-          ..setLocal(_implicit, _controller._rows[i])
-          ..setLocal('index', i);
-      }
-      // Otherwise, remove the extra templates.
-    } else {
-      for (var i = futureLength; i < currentLength; i++) {
-        _viewContainer.remove();
-      }
-    }
+    _controller._init();
   }
 }
