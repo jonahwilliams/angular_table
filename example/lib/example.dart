@@ -24,6 +24,7 @@ import 'package:angular_components/angular_components.dart';
   preserveWhitespace: false,
 )
 class AppComponent {
+  final _gen = new math.Random();
   final controller = new TableController<Todo>.from([
     new Todo(name: 'This is a todo', createdAt: new DateTime.now()),
     new Todo(name: 'This is another todo', createdAt: new DateTime.now()),
@@ -58,6 +59,7 @@ class AppComponent {
     controller.appendAll(newTodos);
   }
 
+  /// complete currently selected todos.
   void completeSelected() {
     for (var todo in selected) {
       todo.isDone = true;
@@ -65,6 +67,7 @@ class AppComponent {
     selected.clear();
   }
 
+  /// update selected todos to `complete`.
   void updateSelected(bool value, Todo todo) {
     if (value) {
       selected.add(todo);
@@ -97,7 +100,8 @@ class Todo {
     return new Todo(
       name: name,
       isDone: false,
-      createdAt: new DateTime.now(),
+      createdAt:
+          new DateTime.now().add(new Duration(seconds: _gen.nextInt(2000))),
     );
   }
 }

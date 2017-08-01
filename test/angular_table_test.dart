@@ -170,7 +170,7 @@ class TestComponent implements OnInit {
   @Input()
   List<String> data;
 
-  TableController controller;
+  TableController<String> controller;
 
   @override
   void ngOnInit() {
@@ -181,16 +181,16 @@ class TestComponent implements OnInit {
 @EnsureTag('test')
 class TestPO {
   @ByClass('col-1')
-  List<PageLoaderElement> firstColumn;
+  Lazy<List<PageLoaderElement>> _firstColumn;
 
   @ByClass('col-2')
-  List<PageLoaderElement> secondColumn;
+  Lazy<List<PageLoaderElement>> _secondColumn;
 
   Future<List<Object>> get first async {
-    return await Future.wait((await firstColumn).map((x) => x.innerText));
+    return await Future.wait((await _firstColumn()).map((x) => x.innerText));
   }
 
   Future<List<Object>> get second async {
-    return await Future.wait((await secondColumn).map((x) => x.innerText));
+    return await Future.wait((await _secondColumn()).map((x) => x.innerText));
   }
 }
