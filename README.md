@@ -1,11 +1,10 @@
 # angular_table
 
-A library for Dart developers. It is awesome.
+A directive for rendering table views,  currently experimental.
+
+![a table](/example_table.png)
 
 ## Usage
 
-## Features and bugs
+See `examples/` for a simple usecase of TableController. 
 
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: http://example.com/issues/replaceme
