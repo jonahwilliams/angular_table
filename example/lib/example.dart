@@ -46,19 +46,19 @@ import 'package:angular_components/angular_components.dart';
 )
 class AppComponent {
   final _gen = new math.Random();
-  final controller = new TableController<Todo>.from([
+  final controller = new StatefulTableController<Todo>(rows: [
     new Todo(
         name: 'This is a todo',
-        createdAt: new DateTime.fromMicrosecondsSinceEpoch(1000200300000)),
+        createdAt: new DateTime.fromMillisecondsSinceEpoch(100020030000000)),
     new Todo(
         name: 'This is another todo',
-        createdAt: new DateTime.fromMicrosecondsSinceEpoch(100000100000)),
+        createdAt: new DateTime.fromMillisecondsSinceEpoch(10000010000000)),
     new Todo(
         name: 'finish this table',
-        createdAt: new DateTime.fromMicrosecondsSinceEpoch(1000002300000)),
+        createdAt: new DateTime.fromMillisecondsSinceEpoch(100000230000000)),
     new Todo(
         name: 'eat some food',
-        createdAt: new DateTime.fromMicrosecondsSinceEpoch(1000500000000)),
+        createdAt: new DateTime.fromMillisecondsSinceEpoch(1000500000000)),
     new Todo(name: 'do some work', createdAt: new DateTime.now()),
   ]);
   final selected = new Set<Todo>();
@@ -66,16 +66,12 @@ class AppComponent {
 
   /// Deletes the row at [index]
   void handleDelete(int index) {
-    controller
-      ..removeRow(index)
-      ..updateIndex();
+    controller.removeAt(index);
   }
 
   /// Adds a new row to the table.
   void handleAddRow() {
-    controller
-      ..append(new Todo(name: todoName, createdAt: new DateTime.now()))
-      ..updateIndex();
+    controller.add(new Todo(name: todoName, createdAt: new DateTime.now()));
     todoName = '';
   }
 
@@ -89,17 +85,13 @@ class AppComponent {
   /// Adds 5 todos at once
   void handleAdd5() {
     var newTodos = new List.generate(5, (_) => new Todo.random());
-    controller
-      ..appendAll(newTodos)
-      ..updateIndex();
+    controller.addAll(newTodos);
   }
 
   void handleSort() {
-    controller
-      ..sort((left, right) {
-        return left.createdAt.compareTo(right.createdAt);
-      })
-      ..updateIndex();
+    controller.sort((left, right) {
+      return left.createdAt.compareTo(right.createdAt);
+    });
   }
 }
 
@@ -182,4 +174,7 @@ class Todo {
           new DateTime.now().add(new Duration(seconds: _gen.nextInt(2000))),
     );
   }
+
+  @override
+  String toString() => 'Todo{$name, $createdAt}';
 }

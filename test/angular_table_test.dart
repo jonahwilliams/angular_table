@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@Tags(const ['codegen'])
 @TestOn('browser')
 import 'dart:async';
 
@@ -16,7 +15,7 @@ const expectedRows = const ['a', 'b', 'c'];
 
 @AngularEntrypoint()
 void main() {
-  group('TableController', () {
+  group('StatefulTableController', () {
     NgTestBed testBed;
     NgTestFixture testFixture;
     TestPO pageObject;
@@ -100,9 +99,7 @@ void main() {
       await setUpComponent(expectedRows);
 
       await testFixture.update((TestComponent component) {
-        component.controller
-          ..append('z')
-          ..updateIndex();
+        component.controller.add('z');
       });
 
       expect(await pageObject.first, ['0', '1', '2', '3']);
@@ -113,9 +110,7 @@ void main() {
       await setUpComponent(const []);
 
       await testFixture.update((TestComponent component) {
-        component.controller
-          ..append('z')
-          ..updateIndex();
+        component.controller.add('z');
       });
 
       expect(await pageObject.first, ['0']);
@@ -153,7 +148,7 @@ void main() {
 
       await testFixture.update((component) {
         component.controller
-          ..removeRow(1)
+          ..removeAt(1)
           ..updateIndex();
       });
 
@@ -166,7 +161,7 @@ void main() {
 
       await testFixture.update((component) {
         component.controller
-          ..insertRow(1, 'z')
+          ..insert(1, 'z')
           ..updateIndex();
       });
 
@@ -209,7 +204,7 @@ class TestComponent implements OnInit {
 
   @override
   void ngOnInit() {
-    controller = new TableController.from(data);
+    controller = new StatefulTableController(rows: data);
   }
 }
 
